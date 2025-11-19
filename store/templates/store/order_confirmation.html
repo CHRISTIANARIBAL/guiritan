@@ -1,0 +1,40 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-green-600 mb-4">Thank you for your order!</h1>
+    <p class="text-lg mb-4">Your order has been placed successfully.</p>
+    <p class="text-gray-600 mb-6 text-lg">Total: <span class="font-semibold text-black">₱{{ order.total_price }}</span>
+    </p>
+
+    <h2 class="text-xl font-semibold mb-3 border-b pb-2">Order Details</h2>
+
+    <table class="w-full text-left border border-gray-200 mb-6">
+        <thead>
+            <tr class="bg-gray-100 text-gray-700">
+                <th class="p-2">Product</th>
+                <th class="p-2">Category</th>
+                <th class="p-2">Price</th>
+                <th class="p-2">Quantity</th>
+                <th class="p-2">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order_items %}
+            <tr class="border-t">
+                <td class="p-2">{{ item.product.name }}</td>
+                <td class="p-2">{{ item.product.category.name }}</td>
+                <td class="p-2">₱{{ item.price }}</td>
+                <td class="p-2">{{ item.quantity }}</td>
+                <td class="p-2 font-semibold text-green-700">₱{% widthratio item.price 1 item.quantity %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center mt-6">
+        <a href="{% url 'home' %}" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+            Continue Shopping
+        </a>
+    </div>
+</div>
+{% endblock %}
