@@ -1,0 +1,56 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<!-- <h1 class="text-4xl font-extrabold mb-10 text-center text-amber-400 tracking-wide drop-shadow-lg">
+  Slipper Store
+</h1> -->
+
+<!-- Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+  {% for product in products %}
+<div
+  class="bg-gray-800 rounded-xl border border-gray-700 shadow-md hover:shadow-amber-400/30 overflow-hidden transition-all duration-300 flex flex-col hover:-translate-y-1 hover:border-amber-400 w-48 mx-auto">
+  
+  <!-- Product Image -->
+  <a href="{% url 'product_detail' product.id %}">
+    <img src="{{ product.image.url }}" alt="{{ product.name }}"
+      class="w-full h-36 object-cover opacity-95 hover:opacity-100 transition duration-300">
+  </a>
+
+  <!-- Product Info -->
+  <div class="p-3 flex flex-col flex-grow">
+    <h2 class="text-sm font-semibold text-white truncate">{{ product.name }}</h2>
+    <p class="text-amber-300 text-xs mt-1">{{ product.category.name }}</p>
+    <p class="text-gray-400 text-xs mt-1">Size: {{ product.size }}</p>
+
+    <p class="text-amber-400 font-bold mt-2 text-base">₱{{ product.price }}</p>
+
+    {% if product.stock > 0 %}
+    <p class="text-green-400 text-xs mt-1">In Stock: {{ product.stock }}</p>
+    {% else %}
+    <p class="text-red-500 text-xs mt-1">Out of Stock</p>
+    {% endif %}
+
+    <!-- Add to Cart -->
+    {% if product.stock > 0 %}
+    <form action="{% url 'add_to_cart' product.id %}" method="post" class="mt-auto">
+      {% csrf_token %}
+      <button type="submit"
+        class="mt-3 w-full bg-gradient-to-r from-amber-400 to-yellow-500 text-white text-xs font-bold py-1.5 rounded-lg shadow hover:from-yellow-400 hover:to-amber-300 transition transform hover:scale-[1.03]">
+        🛒 Add
+      </button>
+    </form>
+    {% else %}
+    <button disabled
+      class="mt-3 w-full bg-gray-700 text-gray-400 text-xs py-1.5 rounded-lg font-semibold cursor-not-allowed">
+      Out
+    </button>
+    {% endif %}
+  </div>
+</div>
+
+  {% empty %}
+  <p class="text-center text-gray-400 col-span-full">No shoes available yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

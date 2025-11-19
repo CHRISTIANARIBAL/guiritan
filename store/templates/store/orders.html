@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Orders - MyShop Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans p-8">
+
+  <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">🧾 All Orders</h1>
+      <div class="flex gap-2">
+        <!-- Delete All Button -->
+        <form method="POST" action="{% url 'delete_all_orders' %}" onsubmit="return confirm('Are you sure you want to delete ALL orders?');">
+          {% csrf_token %}
+          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+            🗑️ Delete All
+          </button>
+        </form>
+
+        <!-- Back to Dashboard -->
+        <a href="{% url 'myadmin' %}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+          ← Back
+        </a>
+      </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse border border-gray-200">
+        <thead class="bg-gray-200 text-gray-700 uppercase text-sm">
+          <tr>
+            <!-- <th class="px-4 py-3 text-left">Order ID</th> -->
+            <th class="px-4 py-3 text-left">User</th>
+            <th class="px-4 py-3 text-left">Product(s)</th>
+            <th class="px-4 py-3 text-left">Total</th>
+            <th class="px-4 py-3 text-left">Date</th>
+            <th class="px-4 py-3 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr class="border-t hover:bg-gray-50 transition">
+            <!-- <td class="px-4 py-3 font-medium">#{{ order.id }}</td> -->
+            <td class="px-4 py-3">{{ order.user.username }}</td>
+            <td class="px-4 py-3">
+              {% for item in order.items.all %}
+                <div>{{ item.product.name }}</div>
+              {% empty %}
+                <div class="text-gray-400 italic">No items</div>
+              {% endfor %}
+            </td>
+            <td class="px-4 py-3">₱{{ order.total_price }}</td>
+            <td class="px-4 py-3">{{ order.created_at|date:"M d, Y - H:i" }}</td>
+            <td class="px-4 py-3 text-center">
+              <form method="POST" action="{% url 'delete_order' order.id %}" onsubmit="return confirm('Delete this order?');" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                  🗑️ Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center text-gray-500 py-6">No orders found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

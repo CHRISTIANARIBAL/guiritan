@@ -1,0 +1,63 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto bg-gray-900 text-gray-200 rounded-2xl shadow-xl p-10 mt-14">
+
+  <h1 class="text-4xl font-extrabold text-amber-400 text-center mb-4 drop-shadow">
+    ✔ Order Completed
+  </h1>
+
+  <p class="text-center text-gray-300 text-lg mb-3">
+    Thank you for choosing our store!  
+  </p>
+
+  <p class="text-center text-xl mb-8">
+    Total Amount: 
+    <span class="font-bold text-amber-300">
+      ₱{{ order.total_price }}
+    </span>
+  </p>
+
+  <h2 class="text-2xl font-semibold text-gray-100 mb-4 border-b border-gray-700 pb-2">
+    📦 Items You Purchased
+  </h2>
+
+  <div class="overflow-x-auto">
+    <table class="w-full border border-gray-800 rounded-xl overflow-hidden">
+      <thead>
+        <tr class="bg-amber-600 text-white">
+          <th class="p-3 text-left">Product</th>
+          <th class="p-3 text-left">Category</th>
+          <th class="p-3 text-left">Price</th>
+          <th class="p-3 text-left">Qty</th>
+          <th class="p-3 text-left">Subtotal</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for item in order_items %}
+        <tr class="border-b border-gray-800 hover:bg-gray-800 transition">
+          <td class="p-3 font-semibold">{{ item.product.name }}</td>
+          <td class="p-3 text-gray-400">{{ item.product.category.name }}</td>
+          <td class="p-3">₱{{ item.price }}</td>
+          <td class="p-3">{{ item.quantity }}</td>
+          <td class="p-3 font-bold text-amber-300">
+            ₱{% widthratio item.price 1 item.quantity %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-center mt-10">
+    <a href="{% url 'home' %}" 
+      class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-amber-400/30 transition">
+      ⮜ Back to Shop
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}

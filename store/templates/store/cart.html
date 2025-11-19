@@ -1,0 +1,102 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<div class="min-h-[80vh] bg-gray-950 text-gray-100 py-10 px-4">
+
+  <h1 class="text-4xl font-bold mb-10 text-center text-red-400 drop-shadow-lg">
+    🛒 Shopping Cart
+  </h1>
+
+  {% if cart_items %}
+  <form method="POST" action="{% url 'checkout' %}">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      {% for item in cart_items %}
+      <!-- Cart Item Card -->
+      <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl hover:border-red-500/50 transition">
+
+        <div class="flex items-center gap-5">
+
+          <!-- Thumbnail -->
+          <img
+            src="{{ item.product.image.url }}"
+            alt="{{ item.product.name }}"
+            class="w-24 h-24 rounded-xl object-cover border border-gray-700"
+          >
+
+          <!-- Product Info -->
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold text-white">
+              {{ item.product.name }}
+            </h2>
+            <p class="text-gray-400 text-sm mt-1">
+              ₱{{ item.product.price }}
+            </p>
+
+            <!-- Quantity Controls -->
+            <div class="flex items-center gap-2 mt-3">
+
+              <a href="{% url 'decrease_quantity' item.product.id %}"
+                class="bg-gray-800 px-3 py-1 rounded-lg border border-gray-700 text-white hover:bg-red-600 transition">
+                −
+              </a>
+
+              <span class="text-red-400 font-bold px-3">
+                {{ item.quantity }}
+              </span>
+
+              <a href="{% url 'increase_quantity' item.product.id %}"
+                class="bg-gray-800 px-3 py-1 rounded-lg border border-gray-700 text-white hover:bg-red-600 transition">
+                +
+              </a>
+
+            </div>
+          </div>
+
+          <!-- Checkbox -->
+          <div>
+            <input type="checkbox" name="selected_items" value="{{ item.product.id }}"
+              class="w-5 h-5 accent-red-500">
+          </div>
+
+        </div>
+
+        <!-- Bottom Row: Total & Action -->
+        <div class="flex justify-between items-center mt-4 border-t border-gray-800 pt-4">
+          <p class="text-gray-300 font-semibold">
+            Total: <span class="text-red-400">₱{{ item.total_price }}</span>
+          </p>
+
+          <a href="{% url 'remove_from_cart' item.product.id %}"
+            class="text-red-500 hover:text-red-400 font-semibold">
+            Remove
+          </a>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- Checkout Button -->
+    <div class="text-center mt-10">
+      <button type="submit"
+        class="bg-red-600 hover:bg-red-700 text-white font-semibold px-10 py-3 rounded-xl shadow-lg hover:shadow-red-500/30 transition">
+        Proceed to Checkout
+      </button>
+    </div>
+
+  </form>
+
+  {% else %}
+  <p class="text-center text-gray-400 text-xl mt-20">
+    Your cart is empty 🛍️
+  </p>
+  {% endif %}
+
+</div>
+
+{% endblock %}

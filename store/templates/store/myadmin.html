@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MyShop Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+  <!-- SIDEBAR -->
+  <aside class="fixed left-0 top-0 h-full w-64 bg-gray-900 text-gray-200 shadow-xl flex flex-col">
+    
+    <!-- Logo / Title -->
+    <div class="p-6 border-b border-gray-800">
+      <h1 class="text-2xl font-bold text-emerald-400 flex items-center gap-2">
+        <i data-lucide="store" class="w-6 h-6"></i>
+        Slipper Shop Admin
+      </h1>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 px-4 py-6 space-y-4 text-gray-300">
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 hover:text-white transition">
+        <i data-lucide="home" class="w-5 h-5"></i>
+        Dashboard
+      </a>
+
+      <a href="#products" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 hover:text-white transition">
+        <i data-lucide="package" class="w-5 h-5"></i>
+        Products
+      </a>
+
+      <a href="{% url 'orders_page' %}" target="_blank" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 hover:text-white transition">
+        <i data-lucide="file-text" class="w-5 h-5"></i>
+        Orders
+      </a>
+
+      <a href="#categories" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 hover:text-white transition">
+        <i data-lucide="tags" class="w-5 h-5"></i>
+        Categories
+      </a>
+
+    </nav>
+
+    <!-- Logout -->
+    <div class="p-4 border-t border-gray-800">
+      <a href="{% url 'logout' %}" 
+         class="flex items-center gap-2 text-red-400 hover:text-red-300 transition">
+        <i data-lucide="log-out" class="w-5 h-5"></i>
+        Logout
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="ml-64 p-10 space-y-12">
+
+    <!-- Products Section -->
+    <section id="products">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          <i data-lucide="package" class="w-6 h-6 text-emerald-600"></i>
+          Products
+        </h2>
+
+        <a href="{% url 'add_product' %}" 
+           class="flex items-center gap-1 text-green-700 hover:text-green-900 font-semibold">
+          <i data-lucide="plus-circle" class="w-5 h-5"></i>
+          Add Product
+        </a>
+      </div>
+
+      <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table class="min-w-full">
+          <thead class="bg-gray-200 text-gray-700 uppercase text-sm">
+            <tr>
+              <th class="px-4 py-3 text-left">Image</th>
+              <th class="px-4 py-3 text-left">Name</th>
+              <th class="px-4 py-3 text-left">Category</th>
+              <!-- <th class="px-4 py-3 text-left">Size</th> -->
+              <th class="px-4 py-3 text-left">Price</th>
+              <th class="px-4 py-3 text-left">Stock</th>
+              <th class="px-4 py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for p in products %}
+            <tr class="border-t hover:bg-gray-50 transition">
+              <td class="px-4 py-3">
+                <img src="{{ p.image.url }}" alt="{{ p.name }}" class="w-14 h-14 object-cover rounded-md">
+              </td>
+              <td class="px-4 py-3 font-medium">{{ p.name }}</td>
+              <td class="px-4 py-3">{{ p.category.name }}</td>
+              <!-- <td class="px-4 py-3">{{ p.size }}</td> -->
+              <td class="px-4 py-3">₱{{ p.price }}</td>
+              <td class="px-4 py-3">{{ p.stock }}</td>
+
+              <td class="px-4 py-3 text-center flex justify-center gap-4">
+                <a href="{% url 'edit_product' p.id %}" class="text-blue-600 hover:text-blue-800">
+                  <i data-lucide="pencil" class="w-5 h-5"></i>
+                </a>
+
+                <a href="{% url 'delete_product' p.id %}" class="text-red-600 hover:text-red-800">
+                  <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center text-gray-500 py-6">No products yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          <i data-lucide="tag" class="w-6 h-6 text-emerald-600"></i>
+          Categories
+        </h2>
+
+        <form action="{% url 'add_category' %}" method="POST" class="flex space-x-2">
+          {% csrf_token %}
+          <input type="text" name="name" placeholder="New category name" class="border rounded px-3 py-1" required>
+
+          <button type="submit" class="flex items-center gap-1 text-green-700 hover:text-green-900 font-semibold">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+            Add
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <ul class="divide-y divide-gray-200">
+          {% for c in categories %}
+          <li class="flex justify-between items-center py-3">
+            <span class="text-gray-700">{{ c.name }}</span>
+
+            <div class="flex gap-4">
+              <a href="{% url 'edit_category' c.id %}" class="text-blue-600 hover:text-blue-800">
+                <i data-lucide="pencil" class="w-5 h-5"></i>
+              </a>
+
+              <a href="{% url 'delete_category' c.id %}" class="text-red-600 hover:text-red-800">
+                <i data-lucide="trash" class="w-5 h-5"></i>
+              </a>
+            </div>
+          </li>
+          {% empty %}
+          <li class="text-center text-gray-500 py-4">No categories available.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

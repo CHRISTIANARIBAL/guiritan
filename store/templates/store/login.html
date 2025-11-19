@@ -1,0 +1,54 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[70vh]">
+  <div class="bg-gray-900 border border-gray-700 p-8 rounded-2xl shadow-lg w-full max-w-sm text-gray-200">
+    <h2 class="text-3xl font-extrabold text-center mb-6 text-amber-400 drop-shadow-md">
+      🔐 Login to ShoeStore
+    </h2>
+
+    {% if messages %}
+    <div class="mb-4">
+      {% for message in messages %}
+      <p class="text-center text-sm text-red-400 font-medium bg-red-900/30 py-2 rounded-md">{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+
+      <!-- Username -->
+      <div>
+        <label class="block mb-1 font-semibold text-gray-300">Username</label>
+        <input type="text" name="username"
+          class="w-full bg-gray-800 text-white border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+          required>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="block mb-1 font-semibold text-gray-300">Password</label>
+        <input type="password" name="password"
+          class="w-full bg-gray-800 text-white border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+          required>
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit"
+        class="w-full bg-gradient-to-r from-amber-400 to-yellow-500 text-white py-2.5 rounded-lg font-bold shadow-md hover:from-yellow-400 hover:to-amber-300 transform hover:scale-[1.03] transition focus:ring-2 focus:ring-amber-400 focus:outline-none">
+        🚪 Login
+      </button>
+    </form>
+
+    <!-- 🧩 Links -->
+    <p class="text-center text-sm mt-6 text-gray-400">
+      Don't have an account?
+      <a href="{% url 'register' %}" class="text-amber-400 hover:underline font-semibold">Create one</a>
+    </p>
+    <p class="text-center text-sm mt-2">
+      <a href="{% url 'admin_login' %}" class="text-amber-400 hover:underline font-semibold">Login as Admin</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

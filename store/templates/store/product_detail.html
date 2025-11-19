@@ -1,0 +1,67 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto bg-gray-900 border border-red-700 rounded-2xl shadow-xl p-8 text-gray-200">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+        <!-- PRODUCT IMAGE -->
+        <div class="flex justify-center">
+            <img src="{{ product.image.url }}" 
+                 alt="{{ product.name }}" 
+                 class="w-full max-w-md h-[28rem] object-cover rounded-2xl shadow-lg border border-red-600/50">
+        </div>
+
+        <!-- PRODUCT INFORMATION -->
+        <div class="flex flex-col">
+
+            <h1 class="text-4xl font-extrabold text-red-400 drop-shadow mb-2">
+                {{ product.name }}
+            </h1>
+
+            <p class="text-sm text-gray-400 tracking-wide uppercase mb-3">
+                {{ product.category.name }}
+            </p>
+
+            <p class="text-3xl font-bold text-red-300 mb-5">
+                ₱{{ product.price }}
+            </p>
+
+            <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                {{ product.description }}
+            </p>
+
+            {% if product.stock > 0 %}
+            <!-- FORM -->
+            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
+
+                <!-- SIZE SELECTOR -->
+                <!-- <label for="size" class="block font-semibold text-gray-200 mb-1">Select Size</label>
+                <select name="size" id="size"
+                        class="border border-red-700 bg-gray-800 text-gray-200 rounded-lg px-3 py-2 mb-5 w-full focus:ring-2 focus:ring-red-500 focus:outline-none"
+                        required>
+                    {% for size in product.sizes.all %}
+                    <option value="{{ size.size }}">{{ size.size }}</option>
+                    {% empty %}
+                    <option disabled>No sizes available</option>
+                    {% endfor %}
+                </select> -->
+
+                <!-- ADD TO CART BUTTON -->
+                <button type="submit"
+                        class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-[1.03]">
+                    🛒 Add to Cart
+                </button>
+
+            </form>
+            {% else %}
+            <span class="text-red-400 font-semibold mt-4 block text-lg">❌ Out of Stock</span>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
